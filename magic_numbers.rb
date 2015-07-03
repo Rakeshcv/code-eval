@@ -4,25 +4,23 @@ class MagicNumber
   def new_magic
     File.open(@@file_name).each_line do |line|
 
-      x,y = line.split(' ')
-      a = x.to_i
-      b = y.to_i
+      x,y = line.split(' ').map(&:to_i)
+
       count = 0
 
-      while a <= b
+      while true
         index = []
-        flag = true
 
         arr = x.to_s.split('')
 
-        if arr.uniq.length == 1
-         flag = false
-        end
+        # for example - 11,222,333
+        flag = remove_dups(arr)
 
         start_index = 0
         mod = 0
 
         arr.each do
+
           if !flag
             break
           end
@@ -32,9 +30,7 @@ class MagicNumber
           else
             mod = (mod + arr[mod].to_i) % arr.size
           end
-
           index << mod
-
         end
 
         is_magic = index.detect { |n| index.count(n) > 1 }.nil?
@@ -44,13 +40,21 @@ class MagicNumber
           print "#{x} "
         end
 
+        break if x == y
         x = x.to_i + 1
-        a+=1
       end
 
       print '-1' if count == 0
 
       puts
+    end
+  end
+
+  def remove_dups(arr)
+    if arr.uniq.length == 1
+      false
+    else
+      true
     end
   end
 
